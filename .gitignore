@@ -1,0 +1,6 @@
+target
+.settings
+.shell_history
+log.roo
+*.class
+*.aj
