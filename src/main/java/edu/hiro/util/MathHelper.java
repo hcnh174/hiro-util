@@ -2,19 +2,18 @@ package edu.hiro.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public final class MathHelper
 {
 	private MathHelper(){}
 	
-	public static int randomInteger(int size)
-	{
-		//int rnd=(int)(double)(Math.random()*(double)size);
-		//return rnd;
-		Random random=new Random();
-		return random.nextInt(size);
-	}
+//	public static int randomInteger(int size)
+//	{
+//		//int rnd=(int)(double)(Math.random()*(double)size);
+//		//return rnd;
+//		Random random=new Random();
+//		return random.nextInt(size);
+//	}
 	
 	public static double calculateDiversity(List<Integer> counts)
 	{

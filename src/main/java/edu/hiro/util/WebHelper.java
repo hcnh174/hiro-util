@@ -396,10 +396,12 @@ public final class WebHelper
 	private static ObjectMapper getObjectMapper()
 	{
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.getSerializationConfig().set(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
-		mapper.getSerializationConfig().set(SerializationConfig.Feature.INDENT_OUTPUT, true);		
-		mapper.getSerializationConfig().set(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
-		mapper.getSerializationConfig().setDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
+		SerializationConfig config=mapper.getSerializationConfig();
+		config.set(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
+		config.set(SerializationConfig.Feature.INDENT_OUTPUT, true);
+		config.set(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+		config.set(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
+		config.setDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
 		return mapper;
 	}
 	

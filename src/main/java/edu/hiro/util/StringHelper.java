@@ -947,17 +947,6 @@ public final class StringHelper
 		return join(items,delimiter);
 	}
 	
-	public static String getRandomWord(int min, int max)
-	{
-		int length=min+MathHelper.randomInteger(max);
-		StringBuilder buffer=new StringBuilder();
-		for (int index=0;index<length;index++)
-		{
-			buffer.append(ALPHABET.charAt(MathHelper.randomInteger(26)));
-		}
-		return buffer.toString();
-	}
-	
 	/////////////////////////////////////
 	
 	// generates IDs
