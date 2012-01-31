@@ -397,11 +397,11 @@ public final class WebHelper
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		SerializationConfig config=mapper.getSerializationConfig();
-		config.set(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
-		config.set(SerializationConfig.Feature.INDENT_OUTPUT, true);
-		config.set(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-		config.set(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
-		config.setDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
+		mapper.getSerializationConfig().set(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
+		mapper.getSerializationConfig().set(SerializationConfig.Feature.INDENT_OUTPUT, true);
+		mapper.getSerializationConfig().set(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+		mapper.getSerializationConfig().set(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
+		mapper.setDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
 		return mapper;
 	}
 	
