@@ -36,7 +36,29 @@ public final class RandomHelper
 		return DateHelper.setDate(minyear+RandomHelper.randomInteger(60), RandomHelper.randomInteger(12)+1, RandomHelper.randomInteger(30)+1);
 	}
 
-	public static String getRandomWord(int min, int max)
+//	public static String getRandomWord(int min, int max)
+//	{
+//		int length=min+randomInteger(max);
+//		StringBuilder buffer=new StringBuilder();
+//		for (int index=0;index<length;index++)
+//		{
+//			buffer.append(StringHelper.ALPHABET.charAt(randomInteger(26)));
+//		}
+//		return buffer.toString();
+//	}
+	
+	public static String randomWords(int min, int max)
+	{
+		int length=min+randomInteger(max);
+		StringBuilder buffer=new StringBuilder();
+		for (int index=0;index<length;index++)
+		{
+			buffer.append(randomWord(3,15));
+		}
+		return buffer.toString();
+	}
+	
+	public static String randomWord(int min, int max)
 	{
 		int length=min+randomInteger(max);
 		StringBuilder buffer=new StringBuilder();
