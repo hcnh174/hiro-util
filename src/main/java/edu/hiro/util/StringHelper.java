@@ -30,8 +30,6 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-//import com.oreilly.servlet.Base64Decoder;
-//import com.oreilly.servlet.Base64Encoder;
 
 public final class StringHelper
 {
@@ -947,6 +945,96 @@ public final class StringHelper
 		return join(items,delimiter);
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	/// gunk ////////////////////////////////////////////
+	
+	private final static Map<String,String> replacements=Collections.synchronizedMap(new LinkedHashMap<String,String>());
+	
+	static
+	{
+		replacements.put("%0B","|"); // line break character used for multiple item lists in Filemaker
+		replacements.put("%EF%BF%BD","?"); //DB № //%E2%84%96
+		//replacements.put("%E2%85%A0","1");//Ⅰ
+		//replacements.put("%E2%85%A1","2");//Ⅱ
+		//replacements.put("%E2%85%A2","3");//Ⅲ
+		//replacements.put("%E2%85%A3","4");//Ⅳ
+		//replacements.put("%E9%89%99","鉙");//鉙 \u9259
+	}
+
+	
+	//http://prefetch.net/projects/postgresql_dtrace/postgrestest/pgjdbc/org/postgresql/core/Utils.java
+	public static String removeUnreadableChars(String str)
+	{
+		return replaceUnreadableChars(str,'?');
+	}
+	
+	public static String replaceUnreadableChars(String str, char ch)
+	{
+		//if (str.indexOf('\0')!=-1)
+		//	System.out.println("found unreadable char: "+str);
+		return str.replace('\0',ch);
+	}
+	
+	public static String replaceUnreadableChars(String str, FileHelper.Encoding encoding)
+	{
+		//System.out.println("replaceUnreadableChars("+str+")");
+		String encoded=urlEncode(str,encoding);
+		//FileHelper.appendFile("c:/temp/encoded.txt",str,true);
+		//FileHelper.appendFile("c:/temp/encoded.txt",encoded,true);
+		for (Map.Entry<String,String> entry : replacements.entrySet())
+		{
+			if (encoded.indexOf(entry.getKey())!=-1)
+			{
+				//System.out.println("found "+entry.getKey());
+				encoded=encoded.replace(entry.getKey(),entry.getValue());
+			}
+		}
+		str=urlDecode(encoded,encoding);
+		//str=str.replace('\0','?');
+		return str;
+	}
+	
+//	public static String urlEncode(String str)
+//	{	
+//		return urlEncode(str,FileHelper.Encoding.US_ASCII);
+//	}
+//	
+	public static String urlEncode(String str, FileHelper.Encoding encoding)
+	{
+		try
+		{
+			return URLEncoder.encode(str,encoding.toString());
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new CException(e);
+		}
+	}
+//	
+//	public static String urlDecode(String str)
+//	{	
+//		return urlDecode(str,FileHelper.Encoding.US_ASCII);
+//	}
+//	
+	public static String urlDecode(String str, FileHelper.Encoding encoding)
+	{
+		try
+		{
+			return URLDecoder.decode(str,encoding.toString());
+		}
+		catch(UnsupportedEncodingException e)
+		{
+			throw new CException(e);
+		}
+	}
+//	
 	/////////////////////////////////////
 	
 	// generates IDs

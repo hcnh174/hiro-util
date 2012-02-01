@@ -1,6 +1,7 @@
 package edu.hiro.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,12 +10,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -872,4 +876,136 @@ public class FileHelper
     		closeReader(reader);
     	}
     }
+    
+    public enum Encoding
+	{		
+		UTF8("UTF-8",Charsets.UTF_8),
+		SHIFT_JIS("Shift_JIS"),
+		US_ASCII("US_ASCII",Charsets.US_ASCII);
+		
+		Encoding(String encoding, Charset charset)
+		{
+			this.encoding=encoding;
+			this.charset=charset;
+		}
+		
+		Encoding(String encoding)
+		{
+			this.encoding=encoding;
+			this.charset=Charset.forName(encoding);
+		}
+		
+		private final String encoding;
+		private final Charset charset;
+		
+		public String getEncoding()
+		{
+			return encoding;
+		}
+		
+		public Charset getCharset()
+		{
+			return charset;
+		}
+		
+		@Override
+		public String toString()
+		{
+			return this.encoding;
+		}
+	}
+    
+
+	public static void convertEncoding(String oldfilename, Encoding oldencoding, String newfilename, Encoding newencoding)
+	{
+		String delimiter=FileHelper.NEWLINE;
+		checkPath(oldfilename);
+		checkPath(newfilename);
+		Scanner scanner=null;
+		BufferedWriter writer=null;
+		//int counter=0;
+		try
+		{
+			Charset charset = Charset.forName(newencoding.toString());//Encoding.UTF8.toString());
+			CharsetEncoder encoder = charset.newEncoder();
+			encoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
+			encoder.replaceWith("?".getBytes());
+			
+			//writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfilename),newencoding.toString()));
+			writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newfilename),encoder));
+			scanner=createScanner(oldfilename,delimiter,oldencoding);
+			while (scanner.hasNext())
+			{
+				String line=scanner.nextLine();
+				line=StringHelper.replaceUnreadableChars(line,newencoding);
+				writer.write(line);
+				writer.newLine();
+				//counter++;
+				//if (counter>3)
+				//	break;
+			}
+			writer.flush();
+		}
+		catch(IOException e)
+		{
+			throw new CException(e);
+		}
+		finally
+		{
+			closeWriter(writer);
+			closeScanner(scanner);
+		}		
+	}
+	
+//	public static Scanner createScanner(String filename)
+//	{
+//		return createScanner(filename,"\n");
+//	}
+//	
+//	public static Scanner createScanner(String filename, String delimiter)
+//	{
+//		try
+//		{
+//			FileReader reader=new FileReader(filename);
+//			return createScanner(reader,delimiter);
+//			//return new Scanner(reader).useDelimiter(delimiter);
+//		}
+//		catch(Exception e)
+//		{
+//			throw new CException(e);
+//		}
+//	}
+//	
+//	public static void closeScanner(Scanner scanner)
+//	{
+//		if (scanner==null)
+//			return;
+//		scanner.close();
+//	}
+//	
+	public static Scanner createScanner(String filename, String delimiter, Encoding encoding)
+	{
+		try
+		{
+			InputStreamReader reader=new InputStreamReader(new FileInputStream(filename),encoding.toString());
+			return createScanner(reader,delimiter);
+		}
+		catch(Exception e)
+		{
+			throw new CException(e);
+		}
+	}
+	
+//	public static Scanner createScanner(Reader in, String delimiter)
+//	{
+//		try
+//		{
+//			BufferedReader reader=new BufferedReader(in);
+//			return new Scanner(reader).useDelimiter(delimiter);
+//		}
+//		catch(Exception e)
+//		{
+//			throw new CException(e);
+//		}
+//	}
 }
