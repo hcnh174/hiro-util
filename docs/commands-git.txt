@@ -5,3 +5,24 @@ git remote add origin git@github.com:hcnh174/hiro-util.git
 git push origin master
 git clone git@github.com:hcnh174/hiro-util.git
 
+
+
+
+# to find which process is using a port
+"netstat -a -o" then look up pid in Task Manager (add PID column to display)
+
+#discard uncommitted changes
+git reset HEAD
+
+# throw away local committed changes
+git reset --hard origin/master
+
+#analyze dependencies
+mvn dependency:analyze
+
+# add deleted files to staging area
+git add -u 
+
+# use to update .git/config file if it complains about which branch to merge to
+git config branch.master.remote origin
+git config branch.master.merge refs/heads/master

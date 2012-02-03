@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Maps;
 
 public final class WebHelper
 {	
@@ -329,6 +330,50 @@ public final class WebHelper
 	
 	//////////////////////////////////////////////////////////////////////
 
+	
+	public static Map<String,Object> json(Object... args)
+	{
+		return StringHelper.createMap(args);
+	}
+
+	protected static Map<String,Object> jsonSuccess()
+	{
+		return json(SUCCESS,true,MESSAGE,"success");
+	}
+	
+	public static Map<String,Object> jsonSuccess(Object...args)
+	{
+		Map<String,Object> map=StringHelper.createMap(args);
+		map.put(SUCCESS,true);
+		return json(map);
+	}
+	
+	public static Map<String,Object> jsonSuccessMessage(String message)
+	{
+		return jsonSuccess(MESSAGE,message);
+	}
+	
+	public static Map<String,Object> jsonFailure(Object...args)
+	{
+		Map<String,Object> map=StringHelper.createMap(args);
+		map.put(SUCCESS,false);
+		return json(map);
+	}
+	
+	public static Map<String,Object> jsonFailureMessage(String message)
+	{
+		return jsonFailure(MESSAGE,message);
+	}
+	
+	public static Map<String,Object> jsonUploadSuccess(Object...args)
+	{
+		Map<String,Object> map=jsonSuccess(args);
+		if (!map.containsKey(MESSAGE))
+			map.put(MESSAGE,"success");
+		return json(map);
+	}
+	
+	/*
 	public static String json(HttpServletResponse response, Object... args)
 	{
 		try
@@ -404,6 +449,7 @@ public final class WebHelper
 		mapper.setDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
 		return mapper;
 	}
+	*/
 	
 	///////////////////////////////////////////////////////
 	
