@@ -39,7 +39,7 @@ public enum PlatformType
 	
 	public static PlatformType find(String osname)
 	{
-		System.out.println(osname);
+		//System.out.println(osname);
 		for (PlatformType type : values())
 		{
 			if (type.getOsname().equals(osname))

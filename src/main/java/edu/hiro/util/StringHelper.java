@@ -830,6 +830,14 @@ public final class StringHelper
 	}
 	
 
+	public static String normalize(String value)
+	{
+		if (value==null)
+			return null;
+		value=Normalizer.normalize(value,Normalizer.Form.NFKC);
+		return value;
+	}
+	/*
 	public static String fixWideChars(String value)
 	{
 		if (value==null)
@@ -889,6 +897,7 @@ public final class StringHelper
 		//value=Normalizer.normalize(value,Normalizer.Form.NFD);
 		return value;
 	}
+	*/
 	
 	public static List<String> getNames(Collection<? extends Enum<?>> items)
 	{

@@ -12,7 +12,6 @@
 	<packaging>jar</packaging>
 	<version>0.1.0.BUILD-SNAPSHOT</version>
 	<name>hiro-util</name>
-	<dependencies>
-		
+	<dependencies>		
 	</dependencies>
 </project>
