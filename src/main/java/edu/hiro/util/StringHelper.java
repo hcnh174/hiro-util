@@ -788,10 +788,15 @@ public final class StringHelper
 	//http://www.velocityreviews.com/forums/t137667-changing-system-out-encoding.html
 	public static void println(String str)
 	{
+		println(str,Charsets.UTF_8);
+	}
+	
+	public static void println(String str, Charset charset)
+	{
 		PrintStream out = null;
 		try
 		{
-			out = new PrintStream(System.err, true, FileHelper.ENCODING.toString());
+			out = new PrintStream(System.err, true, charset.toString());
 			out.println(str);
 		}
 		catch (UnsupportedEncodingException e)

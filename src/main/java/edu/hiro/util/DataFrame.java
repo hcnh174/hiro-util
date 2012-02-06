@@ -147,7 +147,6 @@ public class DataFrame
 		return this.columns.size();
 	}
 	
-	/*
 	public CTable getTable()
 	{
 		CTable table=new CTable();
@@ -169,7 +168,6 @@ public class DataFrame
 		}
 		return table;
 	}
-	*/
 
 	public List<String> getColNames()
 	{
