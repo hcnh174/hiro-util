@@ -782,29 +782,65 @@ public final class StringHelper
 		}
 		return items;
 	}
-			
+	
+	
+	private static Charset use_encoding=Charsets.ISO_8859_1;
 	
 	// same as System.out.println, but uses Unicode
-	//http://www.velocityreviews.com/forums/t137667-changing-system-out-encoding.html
+		//http://www.velocityreviews.com/forums/t137667-changing-system-out-encoding.html
+	public static void print(String str)
+	{
+		print(str,use_encoding);
+	}
+	
+	public static void print(String str, Charset charset)
+	{
+		getPrintStream(charset).print(str);
+	}
+	
 	public static void println(String str)
 	{
-		println(str,Charsets.UTF_8);
+		println(str,use_encoding);
 	}
 	
 	public static void println(String str, Charset charset)
 	{
-		PrintStream out = null;
+		getPrintStream(charset).println(str);
+	}
+	
+	private static PrintStream getPrintStream(Charset charset)
+	{
 		try
 		{
-			out = new PrintStream(System.err, true, charset.toString());
-			out.println(str);
+			return new PrintStream(System.out, true, charset.toString());
 		}
 		catch (UnsupportedEncodingException e)
 		{
-			System.err.println(e);
+			throw new CException(e);
 		}
 	}
 	
+//	
+//	
+//	public static void println(String str)
+//	{
+//		println(str,Charsets.UTF_8);
+//	}
+//	
+//	public static void println(String str, Charset charset)
+//	{
+//		PrintStream out = null;
+//		try
+//		{
+//			out = new PrintStream(System.err, true, charset.toString());
+//			out.println(str);
+//		}
+//		catch (UnsupportedEncodingException e)
+//		{
+//			System.err.println(e);
+//		}
+//	}
+//	
 	public static void logError(String str)
 	{
 		System.err.println(str);
