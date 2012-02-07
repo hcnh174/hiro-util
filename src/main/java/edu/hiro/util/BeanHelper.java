@@ -1,16 +1,20 @@
 package edu.hiro.util;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.ConfigurablePropertyAccessor;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+
+import com.google.common.base.Charsets;
+import com.google.common.collect.Maps;
 
 public class BeanHelper
 {
@@ -100,36 +104,119 @@ public class BeanHelper
 		}
 	}
 	
-	public boolean setField(Object target, String property, Object value)
+	//////////////////////////////////////////////////////////////////////////////////////
+	// for direct field access of private or public fields (case-insensitive, cached, and class-specific)
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	private Map<String,Field> fieldmap=Maps.newHashMap();
+
+	public void setField(Object obj, String name, String value)
 	{
 		try
 		{
-			ConfigurablePropertyAccessor accessor=PropertyAccessorFactory.forDirectFieldAccess(this);
-			accessor.setPropertyValue(property,value);
-			return true;
+			value=StringHelper.normalize(value);
+			if (!StringHelper.hasContent(value))
+				return;
+			Field field = getFieldAccessor(obj,name);
+			if (field==null)
+				return;
+			field.set(obj,value);
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			throw(new CException(e));
-			//System.err.println(e.getMessage());
-			//return false;
+			StringHelper.println("Can't set field: "+name+": "+e,Charsets.UTF_16);
 		}
 	}
 	
-	public Object getField(Object target, String property)
+	public Object getField(Object obj, String name)
 	{
 		try
 		{
-			ConfigurablePropertyAccessor accessor=PropertyAccessorFactory.forDirectFieldAccess(this);
-			return accessor.getPropertyValue(property);
+			Field field = getFieldAccessor(obj,name);
+			if (field==null)
+				return null;
+			return field.get(obj);
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			throw(new CException(e));
-			//System.err.println(e.getMessage());
-			//return null;
+			StringHelper.println("Can't get field: "+name+": "+e,Charsets.UTF_16);
+			return null;
 		}
 	}
+	
+	private Field getFieldAccessor(Object obj, String name) throws SecurityException, NoSuchFieldException
+	{
+		if (!StringHelper.hasContent(name))
+		{
+			StringHelper.println("Field name is null or empty: "+name,Charsets.UTF_16);
+			return null;
+		}
+		String key=getFieldAccessorKey(obj,name);
+		if (!fieldmap.containsKey(key))
+			cacheFieldAccessors(obj);
+		Field field=fieldmap.get(key);
+		if (field==null)
+		{
+			StringHelper.println("Can't find field: "+name,Charsets.UTF_16);
+			return null;
+		}
+		return field;
+	}
+		
+	private void cacheFieldAccessors(Object obj)
+	{
+		String classkey=obj.getClass().getCanonicalName().toLowerCase();
+		if (fieldmap.containsKey(classkey))
+			return;
+		StringHelper.println("caching field accessors for class: "+obj.getClass().getName(),Charsets.UTF_16);
+		for (Field field : obj.getClass().getDeclaredFields())
+		{
+			String key=getFieldAccessorKey(obj,field.getName());
+			//StringHelper.println("caching field accessor: "+key,Charsets.UTF_16);
+			field.setAccessible(true);
+			fieldmap.put(key,field);
+		}
+		fieldmap.put(classkey,null); // hack!
+	}
+	
+	private String getFieldAccessorKey(Object obj, String field)
+	{
+		String key=obj.getClass().getCanonicalName()+":"+field;
+		key=key.toLowerCase();
+		return key;
+	}
+	
+
+//	public boolean setField(Object target, String property, Object value)
+//	{
+//		try
+//		{
+//			ConfigurablePropertyAccessor accessor=PropertyAccessorFactory.forDirectFieldAccess(this);
+//			accessor.setPropertyValue(property,value);
+//			return true;
+//		}
+//		catch(Exception e)
+//		{
+//			throw(new CException(e));
+//			//System.err.println(e.getMessage());
+//			//return false;
+//		}
+//	}
+//	
+//	public Object getField(Object target, String property)
+//	{
+//		try
+//		{
+//			ConfigurablePropertyAccessor accessor=PropertyAccessorFactory.forDirectFieldAccess(this);
+//			return accessor.getPropertyValue(property);
+//		}
+//		catch(Exception e)
+//		{
+//			throw(new CException(e));
+//			//System.err.println(e.getMessage());
+//			//return null;
+//		}
+//	}
 	
 	public static List<String> getProperties(Object obj)
 	{
@@ -179,3 +266,16 @@ public class BeanHelper
 		}
 	}
 }
+
+/*
+BeanHelper helper=new BeanHelper();
+//BeanHelper helper=new BeanHelper();
+PegribaPatient patient=new PegribaPatient();
+String field1="IFN既往";
+String field2="fsfsdf";
+//helper.setField(patient, field1, "test");
+helper.setField(patient, field2, "test");
+helper.setField(patient, field2, "test");
+helper.setField(patient, field1, "test");
+System.out.println("patient.ifn既往="+helper.getField(patient,field1));//patient.ifn既往);
+*/
