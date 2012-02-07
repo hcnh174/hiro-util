@@ -110,6 +110,14 @@ public class BeanHelper
 	
 	private Map<String,Field> fieldmap=Maps.newHashMap();
 
+	public void setFields(Object obj, Map<String,String> props)
+	{
+		for (String field : props.keySet())
+		{
+			setField(obj,field,props.get(field));
+		}
+	}
+	
 	public void setField(Object obj, String name, String value)
 	{
 		try

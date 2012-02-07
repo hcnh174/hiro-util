@@ -46,6 +46,12 @@ public class FileHelper
 		File file=new File(filename);
 		return file.exists();
 	}
+	
+	public static void checkExists(String filename)
+	{
+		if (!exists(filename))
+			throw new CException("File does not exist: "+filename);
+	}
 
 	public static Date getLastModifiedDate(String filename)
 	{
