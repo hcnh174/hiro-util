@@ -20,6 +20,22 @@ public final class RandomHelper
 		return min+randomInteger(max-min);
 	}
 	
+	public static Float randomFloat()
+	{
+		Random random=new Random();
+		return random.nextFloat();
+	}
+	
+	public static Float randomFloat(float min, float max)
+	{
+		return randomInteger((int)min,(int)max)+randomFloat();
+	}
+	
+	public static Boolean randomBoolean()
+	{
+		return randomFloat()<=0.5;
+	}
+	
 	public static String randomText(String ... args)
 	{
 		List<String> items=Arrays.asList(args);
@@ -36,6 +52,8 @@ public final class RandomHelper
 		return DateHelper.setDate(minyear+RandomHelper.randomInteger(60), RandomHelper.randomInteger(12)+1, RandomHelper.randomInteger(30)+1);
 	}
 
+
+	
 //	public static String getRandomWord(int min, int max)
 //	{
 //		int length=min+randomInteger(max);

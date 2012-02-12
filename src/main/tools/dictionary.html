@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC
+	"-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext-4.0.7-gpl/resources/css/ext-all.css"/>
+<script src="http://cdn.sencha.io/ext-4.0.7-gpl/ext-all-debug.js"></script>
+<script src="dictionary.js"></script>
+
+</head>
+
+<body>
+
+<form name="form1">
+<b>Data Dictionary Utility</b>
+<pre>
+name	type	maxlength	notnull	json	dflt	colname	altname	source	sample
+患者番号	String	50	TRUE	TRUE	12345	kanjabango	dbno	fmfirstexam.dbno	RandomHelper.randomText("太朗","花子")
+</pre>
+<input type="button" onclick="run(this.form)" value="Run"/>
+<input type="button" onclick="clearForm(this.form)" value="Clear"/>
+<br/>
+<textarea name="input" cols="" style="width: 100%;" wrap="virtual" rows="5">
+</textarea>
+<hr/>Fields<br/>
+<textarea name="declarations" cols="100" rows="6"></textarea>
+<hr/>Accessors<br/>
+<textarea name="accessors" cols="100" rows="6"></textarea>
+<hr/>SQL<br/>
+<textarea name="sql" cols="100" rows="6"></textarea>
+<hr/>Sample data<br/>
+<textarea name="sample" cols="100" rows="6"></textarea>
+<hr/>ExtJs model fields<br/>
+<textarea name="extjsmodelfields" cols="100" rows="6"></textarea>
+<hr/>ExtJs grid fields<br/>
+<textarea name="extjsgridfields" cols="100" rows="6"></textarea>
+<!--
+<hr/>Field name converters<br/>
+<textarea name="converters" cols="100" rows="3"></textarea>
+<hr/>View<br/>
+<textarea name="view" cols="100" rows="3"></textarea>
+<hr/>ExtJs grid fields<br/>
+<textarea name="extjsgridfields" cols="100" rows="3"></textarea>
+<hr/>ExtJs form fields<br/>
+<textarea name="extjsformfields" cols="100" rows="3"></textarea>
+<hr/>Json mixin interface<br/>
+<textarea name="jsonfields" cols="100" rows="3"></textarea>
+ -->
+</form>
+
+
+<script language="JavaScript">
+
+function run(form)
+{
+	var input=form.elements.input.value;
+	var dictionary=new hiro.Dictionary(input);
+	form.elements.declarations.value=dictionary.createDeclarations();
+	form.elements.accessors.value=dictionary.createAccessors();
+	form.elements.sql.value=dictionary.createSql();
+	form.elements.sample.value=dictionary.createSampleData();
+// 	form.elements.converters.value=dictionary.createFieldNameConverters();
+// 	form.elements.view.value=dictionary.createView();
+ 	form.elements.extjsmodelfields.value=dictionary.createExtJsModelFields();
+ 	form.elements.extjsgridfields.value=dictionary.createExtJsGridFields();
+// 	form.elements.extjsformfields.value=dictionary.createExtJsFormFields();
+// 	form.elements.jsonfields.value=dictionary.createJsonFields();
+}
+
+function clearForm(form)
+{
+	form.elements.input.value='';
+	form.elements.declarations.value='';
+	form.elements.accessors.value='';
+	form.elements.sql.value='';
+	form.elements.converters.value='';
+	form.elements.view.value='';
+	form.elements.extjsgridfields.value='';
+	form.elements.extjsformfields.value='';
+	form.elements.jsonfields.value='';
+}
+
+Ext.onReady(function()
+{
+	
+});
+</script>
+</body>
+
+</html>

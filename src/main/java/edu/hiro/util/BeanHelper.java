@@ -132,7 +132,41 @@ public class BeanHelper
 		}
 		catch (Exception e)
 		{
-			StringHelper.println("Can't set field: "+name+": "+e,Charsets.UTF_16);
+			StringHelper.println("Can't set field: "+name+": "+e);
+		}
+	}
+	
+	public void setField(Object obj, String name, Number value)
+	{
+		try
+		{
+			if (value==null)
+				return;
+			Field field = getFieldAccessor(obj,name);
+			if (field==null)
+				return;
+			field.set(obj,value);
+		}
+		catch (Exception e)
+		{
+			StringHelper.println("Can't set field: "+name+": "+e);
+		}
+	}
+
+	public void setField(Object obj, String name, Date value)
+	{
+		try
+		{
+			if (value==null)
+				return;
+			Field field = getFieldAccessor(obj,name);
+			if (field==null)
+				return;
+			field.set(obj,value);
+		}
+		catch (Exception e)
+		{
+			StringHelper.println("Can't set field: "+name+": "+e);
 		}
 	}
 	
@@ -147,7 +181,7 @@ public class BeanHelper
 		}
 		catch (Exception e)
 		{
-			StringHelper.println("Can't get field: "+name+": "+e,Charsets.UTF_16);
+			StringHelper.println("Can't get field: "+name+": "+e);
 			return null;
 		}
 	}
@@ -156,7 +190,7 @@ public class BeanHelper
 	{
 		if (!StringHelper.hasContent(name))
 		{
-			StringHelper.println("Field name is null or empty: "+name,Charsets.UTF_16);
+			StringHelper.println("Field name is null or empty: "+name);
 			return null;
 		}
 		String key=getFieldAccessorKey(obj,name);
@@ -165,7 +199,7 @@ public class BeanHelper
 		Field field=fieldmap.get(key);
 		if (field==null)
 		{
-			StringHelper.println("Can't find field: "+name,Charsets.UTF_16);
+			StringHelper.println("Can't find field: "+name);
 			return null;
 		}
 		return field;
@@ -176,11 +210,11 @@ public class BeanHelper
 		String classkey=obj.getClass().getCanonicalName().toLowerCase();
 		if (fieldmap.containsKey(classkey))
 			return;
-		StringHelper.println("caching field accessors for class: "+obj.getClass().getName(),Charsets.UTF_16);
+		StringHelper.println("caching field accessors for class: "+obj.getClass().getName());
 		for (Field field : obj.getClass().getDeclaredFields())
 		{
 			String key=getFieldAccessorKey(obj,field.getName());
-			//StringHelper.println("caching field accessor: "+key,Charsets.UTF_16);
+			//StringHelper.println("caching field accessor: "+key);
 			field.setAccessible(true);
 			fieldmap.put(key,field);
 		}
