@@ -16,7 +16,7 @@
 <form name="form1">
 <b>Data Dictionary Utility</b>
 <pre>
-name	type	maxlength	notnull	json	dflt	colname	altname	source	sample
+name	type	maxlength	notnull	json	dflt	colname	label	source	sample
 患者番号	String	50	TRUE	TRUE	12345	kanjabango	dbno	fmfirstexam.dbno	RandomHelper.randomText("太朗","花子")
 </pre>
 <input type="button" onclick="run(this.form)" value="Run"/>
@@ -75,11 +75,12 @@ function clearForm(form)
 	form.elements.declarations.value='';
 	form.elements.accessors.value='';
 	form.elements.sql.value='';
-	form.elements.converters.value='';
-	form.elements.view.value='';
-	form.elements.extjsgridfields.value='';
-	form.elements.extjsformfields.value='';
-	form.elements.jsonfields.value='';
+	form.elements.sample.value='';
+	//form.elements.converters.value='';
+	//form.elements.view.value='';
+	form.elements.extjsmodelfields.value='';
+	form.elements.extjsgridfields.value='';	
+	//form.elements.jsonfields.value='';
 }
 
 Ext.onReady(function()

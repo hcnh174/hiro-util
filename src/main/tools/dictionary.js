@@ -7,7 +7,6 @@ Ext.define('hiro.Field', {
 	maxlength: null,
 	dflt: null,
 	colname: null,
-	altname: null,
 	source: null,
 	label: null,
 	description: null,
@@ -23,9 +22,9 @@ Ext.define('hiro.Field', {
 		if (!isNaN(this.maxlength))
 			this.maxlength=parseInt(this.maxlength,10);
 		this.notnull=(this.notnull==='TRUE');
-		if (this.colname=='')
+		if (this.colname==null || this.colname=='')
 			this.colname=this.name;
-		this.colname=this.colname.toLowerCase();
+		this.colname=this.toUnderscore(this.colname);//this.colname.toLowerCase();
 		this.dflt=this.findDefault(this.dflt,this.type,this.notnull);
 	},
 	
@@ -65,7 +64,7 @@ Ext.define('hiro.Field', {
 		if (this.json)
 			annotations.push('@JsonProperty');
 		this.addValidators(this.maxlength,this.notnull,annotations);
-		annotations.push('@Column(name="'+this.colname+'")');
+		//annotations.push('@Column(name="'+this.colname+'")');
 		if (annotations.length==0)
 			return '';
 		else return annotations.join(' ')+'\n';
@@ -79,8 +78,8 @@ Ext.define('hiro.Field', {
 	createDeclaration:function()
 	{
 		var annotations=this.getPropertyAnnotations();
-		var altname=(this.altname==null) ? '' : ' //'+this.altname;
-		return annotations+'protected '+this.type+' '+this.name+'='+this.dflt+';'+altname+'\n';
+		var label=(this.label==null) ? '' : ' //'+this.label;
+		return annotations+'protected '+this.type+' '+this.name+'='+this.dflt+';'+label+'\n';
 	},
 	
 	createSetter:function()
@@ -135,8 +134,8 @@ Ext.define('hiro.Field', {
 	createSql:function()
 	{
 		var sqltype=this.findSqlType(this.type,this.maxlength,this.notnull);
-		var altname=(this.altname) ? ' --'+this.altname : '';
-		return '\t'+this.colname+' '+sqltype+','+altname+'\n';
+		var label=(this.label) ? ' --'+this.label : '';
+		return '\t'+this.colname+' '+sqltype+','+label+'\n';
 	},
 	
 	createSampleData:function()
@@ -149,16 +148,11 @@ Ext.define('hiro.Field', {
 		return '{name: \''+this.name+'\' '+this.findJsType(this.type)+'},\n';
 	},
 	
-	quote:function(value)
-	{
-		return '\''+value+'\'';
-	},
-	
 	createExtJsGridField:function()
 	{
 		var attributes=[];
 		attributes.push('dataIndex: '+this.quote(this.name));
-		attributes.push('header: '+this.quote(this.name));
+		attributes.push('header: '+this.quote(this.label));
 		if (this.type=='Date')
 		{
 			attributes.push('xtype: '+this.quote('datecolumn'));
@@ -180,6 +174,16 @@ Ext.define('hiro.Field', {
 		else if (type==='String')
 			{return '';}
 		else {throw 'Can\'t find mapping for JavaScript type '+type+' ('+this.name+')';}
+	},
+	
+	quote:function(value)
+	{
+		return '\''+value+'\'';
+	},
+	
+	toUnderscore: function(str)
+	{
+		return str.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
 	}
 	
 	/*
