@@ -11,7 +11,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -27,15 +26,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 
 public final class WebHelper
 {	
@@ -738,6 +735,36 @@ public final class WebHelper
 		return filter.filter(html);
 	}
 	*/
+	
+	public static List<LabelValue> getLabelValues(List<? extends Object> items)
+	{
+		List<LabelValue> values=Lists.newArrayList();
+		for (Object item : items)
+		{
+			values.add(new LabelValue(item));
+		}
+		return values;
+	}
+
+	public static class LabelValue
+	{
+		protected String label;
+		protected String value;
+		
+		public LabelValue(String value, Object label)
+		{
+			this.value=value;
+			this.label=label.toString();
+		}
+		
+		public LabelValue(Object value)
+		{
+			this(value.toString(),value);
+		}
+		
+		public String getLabel(){return label;}
+		public String getValue(){return value;}
+	}
 	
 	public static String getDocType(HttpServletRequest request)
 	{

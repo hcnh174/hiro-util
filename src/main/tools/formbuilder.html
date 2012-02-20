@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC
+	"-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext-4.0.7-gpl/resources/css/ext-all.css"/>
+<script src="http://cdn.sencha.io/ext-4.0.7-gpl/ext-all-debug.js"></script>
+<script src="formbuilder.js"></script>
+
+</head>
+
+<body>
+
+<form name="form1">
+<b>Form builder</b>
+<pre>
+DBNo			999999					ﾌﾘｶﾞﾅ			 ﾏﾙﾏﾙ ﾏﾙﾏﾙ																		
+患者名			 ○○　○○								生年月日			yyyy/mm/dd						性別			男						
+
+</pre>
+<input type="button" onclick="run(this.form)" value="Run"/>
+<input type="button" onclick="clearForm(this.form)" value="Clear"/>
+<br/>
+<textarea name="input" cols="" style="width: 100%;" wrap="virtual" rows="5">
+DBNo			999999					ﾌﾘｶﾞﾅ			 ﾏﾙﾏﾙ ﾏﾙﾏﾙ																	
+患者名			 ○○　○○								生年月日			yyyy/mm/dd						性別			男					
+																												
+■初診時																												
+初診時診断				LC(非代償性)						▼																		
+併発肝疾患				HBV		不明		▼	Alcoholic				不明		▼	Fatty Liver				不明		▼						
+				PBC		不明		▼	NASH		不明		▼	AIH		不明		▼	HIV		不明		▼					
+				 sAg(-)/sAb(-)/cAb(-)																								
+</textarea>
+<hr/>JavaScript<br/>
+<textarea name="js" cols="100" rows="15"></textarea>
+</form>
+
+
+<script language="JavaScript">
+
+function run(form)
+{
+	var input=form.elements.input.value;
+	var formbuilder=new hiro.FormBuilder(input);
+	form.elements.js.value=formbuilder.createForm();
+}
+
+function clearForm(form)
+{
+	form.elements.input.value='';
+	form.elements.js.value='';
+}
+
+Ext.onReady(function()
+{
+	
+});
+</script>
+</body>
+
+</html>
