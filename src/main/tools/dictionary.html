@@ -36,22 +36,46 @@ name	type	maxlength	notnull	json	dflt	colname	label	source	sample
 <textarea name="extjsmodelfields" cols="100" rows="6"></textarea>
 <hr/>ExtJs grid fields<br/>
 <textarea name="extjsgridfields" cols="100" rows="6"></textarea>
-<!--
-<hr/>Field name converters<br/>
-<textarea name="converters" cols="100" rows="3"></textarea>
-<hr/>View<br/>
-<textarea name="view" cols="100" rows="3"></textarea>
-<hr/>ExtJs grid fields<br/>
-<textarea name="extjsgridfields" cols="100" rows="3"></textarea>
-<hr/>ExtJs form fields<br/>
-<textarea name="extjsformfields" cols="100" rows="3"></textarea>
-<hr/>Json mixin interface<br/>
-<textarea name="jsonfields" cols="100" rows="3"></textarea>
- -->
+</form>
+
+<form name="form2">
+<b>CamelCase Utility</b>
+<input type="button" onclick="convertCamelCase(this.form)" value="Convert to camelCase"/>
+<br/>
+<textarea name="input" cols="" style="width: 100%;" wrap="virtual" rows="5">
+</textarea>
+<hr/>Output<br/>
+<textarea name="output" cols="100" rows="6"></textarea>
 </form>
 
 
 <script language="JavaScript">
+
+function convertCamelCase(form)
+{
+	var str=form.elements.input.value;
+	var buffer=[];
+	var arr=str.split('\n');
+	for (var row=0;row<arr.length;row++) // start on the second line
+	{
+		var line=arr[row];
+		if (line.trim()==='')
+			{continue;}
+		var values=line.split('\t');
+		var buf=[];
+		for (var index=0;index<values.length;index++)
+		{
+			buf.push(toCamel(values[index]));
+		}
+		buffer.push(buf.join('\t'));
+	}	
+	form.elements.output.value=buffer.join('\n');
+}
+
+function toCamel(str)
+{
+	return str.replace(/(\_[a-z])/g, function($1){return $1.toUpperCase().replace('_','');});
+}
 
 function run(form)
 {
