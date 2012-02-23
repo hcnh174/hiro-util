@@ -1,6 +1,8 @@
 package edu.hiro.util;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import ch.ralscha.extdirectspring.filter.NumericFilter;
 import ch.ralscha.extdirectspring.filter.StringFilter;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.types.path.PathBuilder;
 
@@ -43,8 +46,18 @@ public class ExtDirectHelper
 	{
 		System.out.println("creating bollean filter from request: "+request.toString());
 		BooleanBuilder builder = new BooleanBuilder();
-		for (Filter filter : request.getFilters())		
+		//Filter filter=request.getFilters().get(request.getFilters().size()-1);
+		Set<String> fields=Sets.newHashSet();
+		// go backwards and only count each field once
+		for (int index=request.getFilters().size()-1; index>=0; index--)
 		{
+			Filter filter=request.getFilters().get(index);
+			if (fields.contains(filter.getField()))
+			{
+				System.out.println("skipping field "+filter.getField());
+				continue;
+			}
+			else fields.add(filter.getField());
 			System.out.println("filter="+filter.toString());
 			if (filter instanceof StringFilter)
 			{
@@ -54,13 +67,15 @@ public class ExtDirectHelper
 			else if (filter instanceof NumericFilter)
 			{
 				NumericFilter numfilter=(NumericFilter)filter;
-				builder.and(path.get(filter.getField()).eq(numfilter.getValue()));
+				builder.and(path.get(filter.getField()).eq((Integer)numfilter.getValue()));
 			}
 			else if (filter instanceof DateFilter)
 			{
 				DateFilter datefilter=(DateFilter)filter;
-				builder.and(path.get(filter.getField()).eq(datefilter.getValue()));
+				Date date=DateHelper.parse(datefilter.getValue(),DateHelper.YYYYMMDD_PATTERN);
+				builder.and(path.get(filter.getField()).eq(date));
 			}
+			
 		}
 		return builder;
 	}
