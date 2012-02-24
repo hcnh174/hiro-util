@@ -36,6 +36,7 @@ public final class StringHelper
 	public static final String EMPTY_STRING="";
 	public static final String UNICODE_SPACE=" ";
 	public static final String ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	public static final String alphabet="abcdefghijklmnopqrstuvwxyz";
 	private static String DEFAULT_JOIN_DELIMITER=",";
 	
 	private StringHelper(){}

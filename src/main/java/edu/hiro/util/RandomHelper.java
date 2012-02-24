@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+
 public final class RandomHelper
 {
 	private RandomHelper(){}
@@ -65,25 +67,30 @@ public final class RandomHelper
 //		return buffer.toString();
 //	}
 	
+	public static char randomLetter()
+	{
+		return StringHelper.alphabet.charAt(randomInteger(26));
+	}
+	
 	public static String randomWords(int min, int max)
 	{
 		int length=min+randomInteger(max);
-		StringBuilder buffer=new StringBuilder();
+		List<String> buffer=Lists.newArrayList();
 		for (int index=0;index<length;index++)
 		{
-			buffer.append(randomWord(3,15));
+			buffer.add(randomWord(3,15));
 		}
-		return buffer.toString();
+		return StringHelper.join(buffer," ");
 	}
 	
 	public static String randomWord(int min, int max)
 	{
 		int length=min+randomInteger(max);
-		StringBuilder buffer=new StringBuilder();
+		List<String> buffer=Lists.newArrayList();
 		for (int index=0;index<length;index++)
 		{
-			buffer.append(StringHelper.ALPHABET.charAt(randomInteger(26)));
+			buffer.add(""+randomLetter());
 		}
-		return buffer.toString();
+		return StringHelper.join(buffer,"");
 	}
 }
