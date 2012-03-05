@@ -67,7 +67,7 @@ Ext.define('hiro.Field', {
 		//annotations.push('@Column(name="'+this.colname+'")');
 		if (annotations.length==0)
 			return '';
-		else return annotations.join(' ')+'\n';
+		else return annotations.join(' ')+' ';//+'\n';
 	},
 	
 	getMethodAnnotations:function()
@@ -145,7 +145,7 @@ Ext.define('hiro.Field', {
 	
 	createExtJsModelField:function()
 	{
-		return '{name: \''+this.name+'\' '+this.findJsType(this.type)+'},\n';
+		return '{name: \''+this.name+'\''+this.findJsType(this.type)+'},\n';
 	},
 	
 	createExtJsGridField:function()
