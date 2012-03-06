@@ -35,7 +35,12 @@ public final class RandomHelper
 	
 	public static Boolean randomBoolean()
 	{
-		return randomFloat()<=0.5;
+		return randomBoolean(0.5f);
+	}
+	
+	public static Boolean randomBoolean(double prob_true)
+	{
+		return randomFloat()<=prob_true;
 	}
 	
 	public static String randomText(String ... args)

@@ -65,9 +65,18 @@ Ext.define('hiro.Field', {
 			annotations.push('@JsonProperty');
 		this.addValidators(this.maxlength,this.notnull,annotations);
 		//annotations.push('@Column(name="'+this.colname+'")');
+		if (this.isEnum())
+			annotations.push('@Enumerated(EnumType.STRING)');
 		if (annotations.length==0)
 			return '';
 		else return annotations.join(' ')+' ';//+'\n';
+	},
+	
+	isEnum: function()
+	{
+		if (this.type=='String' || this.type=='Integer' || this.type=='Float' || this.type=='Boolean' || this.type=='Date')
+			return false;
+		else return true;	
 	},
 	
 	getMethodAnnotations:function()
@@ -128,7 +137,12 @@ Ext.define('hiro.Field', {
 				{return 'VARCHAR('+parseInt(maxlength,10)+')'+nullable;}
 			else {return 'TEXT'+nullable;}
 		}
-		else {throw 'Can\'t find mapping for SQL type '+type+' ('+this.name+')';}
+		else
+		{
+			console.log('Can\'t find mapping for SQL type '+type+' ('+this.name+') - assuming Enum');
+			return 'TEXT'+nullable;
+		}
+		//else {throw 'Can\'t find mapping for SQL type '+type+' ('+this.name+')';}
 	},
 	
 	createSql:function()
@@ -156,7 +170,7 @@ Ext.define('hiro.Field', {
 		if (this.type=='Date')
 		{
 			attributes.push('xtype: '+this.quote('datecolumn'));
-			attributes.push('format: '+this.quote('Y-m-d'));
+			attributes.push('format: this.dateFormat');//'+this.quote('Y-m-d'));
 		}
 		return '{'+attributes.join(', ')+'},\n'
 	},
@@ -173,7 +187,8 @@ Ext.define('hiro.Field', {
 			{return ', type: \'float\'';}
 		else if (type==='String')
 			{return '';}
-		else {throw 'Can\'t find mapping for JavaScript type '+type+' ('+this.name+')';}
+		else {return '';}
+		//else {throw 'Can\'t find mapping for JavaScript type '+type+' ('+this.name+')';}
 	},
 	
 	quote:function(value)
@@ -247,6 +262,8 @@ Ext.define('hiro.Dictionary', {
 		{
 			var line=arr[row];
 			if (line.trim()==='') // skip blank lines but don't trim content lines to maintain position
+				{continue;}
+			if (line.substring(0,1)==='#') // skip comments
 				{continue;}
 			var values=line.split('\t');
 			var config={};
