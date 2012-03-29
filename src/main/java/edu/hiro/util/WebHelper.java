@@ -791,5 +791,7 @@ public final class WebHelper
 		public static final String PNG="image/png";
 		public static final String SVG="image/svg+xml";
 		public static final String XLS="application/ms-excel";
+		//public static final String DOCX="application/vnd.msword.document.12";
+		public static final String DOCX="application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 	}
 }

@@ -67,6 +67,8 @@ Ext.define('hiro.Field', {
 		//annotations.push('@Column(name="'+this.colname+'")');
 		if (this.isEnum())
 			annotations.push('@Enumerated(EnumType.STRING)');
+		if (this.type=='Date')
+			annotations.push('@JsonSerialize(using=CustomDateSerializer.class)')
 		if (annotations.length==0)
 			return '';
 		else return annotations.join(' ')+' ';//+'\n';
