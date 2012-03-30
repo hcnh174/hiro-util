@@ -58,8 +58,37 @@ public final class RandomHelper
 	{
 		return DateHelper.setDate(minyear+RandomHelper.randomInteger(60), RandomHelper.randomInteger(12)+1, RandomHelper.randomInteger(30)+1);
 	}
-
-
+	
+	public static Date randomDate(int minyear, int maxyear)
+	{
+		int diff=maxyear-minyear+1;
+		return DateHelper.setDate(minyear+RandomHelper.randomInteger(diff), RandomHelper.randomInteger(12)+1, RandomHelper.randomInteger(30)+1);
+	}
+	
+	public static Date randomDate(Date mindate)
+	{
+		return DateHelper.addWeeks(mindate, RandomHelper.randomInteger(52*3));//up to three years later
+	}
+	
+	public static Date randomDate(Date mindate, Date maxdate)
+	{
+		int minutes=DateHelper.getDuration(mindate, maxdate); //in minutes
+		int weeks=minutes/(60*24*7);
+		return DateHelper.addWeeks(mindate, RandomHelper.randomInteger(weeks));
+	}
+	
+	public static <T> T randomItem(List<T> items)
+	{
+		return items.get(RandomHelper.randomInteger(items.size()));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends Enum<T>> T randomEnum(T values[])
+	{
+		//Enum<?> values[] = cls.getEnumConstants();
+		//return (Enum<T>)values[RandomHelper.randomInteger(values.length)];
+		return values[RandomHelper.randomInteger(values.length)];
+	} 
 	
 //	public static String getRandomWord(int min, int max)
 //	{

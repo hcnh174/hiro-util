@@ -120,36 +120,38 @@ Ext.define('hiro.Field', {
 		return str;
 	},
 	
-	findSqlType:function(type,maxlength,notnull)
+	findSqlType:function(type,maxlength,notnull,unique)
 	{
-		var nullable=(notnull) ? ' NOT NULL' : ' NULL';
+		var constraints=(unique) ? ' UNIQUE' : '';
+		constraints+=(notnull) ? ' NOT NULL' : ' NULL';
+		
 		if (type==='Date')
-			{return 'DATE'+nullable;}
+			{return 'DATE'+constraints;}
 		else if (type==='Boolean')
-			{return 'BOOLEAN'+nullable;}
+			{return 'BOOLEAN'+constraints;}
 		else if (type==='Integer' || type==='Long')
-			{return 'INTEGER'+nullable;}
+			{return 'INTEGER'+constraints;}
 		else if (type==='Float' || type==='Double')
-			{return 'FLOAT'+nullable;}
+			{return 'FLOAT'+constraints;}
 		else if (type==='String' && isNaN(maxlength))
-			{return 'TEXT'+nullable;}
+			{return 'TEXT'+constraints;}
 		else if (type==='String')
 		{
 			if (maxlength!=null)
-				{return 'VARCHAR('+parseInt(maxlength,10)+')'+nullable;}
+				{return 'VARCHAR('+parseInt(maxlength,10)+')'+constraints;}
 			else {return 'TEXT'+nullable;}
 		}
 		else
 		{
 			console.log('Can\'t find mapping for SQL type '+type+' ('+this.name+') - assuming Enum');
-			return 'TEXT'+nullable;
+			return 'TEXT'+constraints;
 		}
 		//else {throw 'Can\'t find mapping for SQL type '+type+' ('+this.name+')';}
 	},
 	
 	createSql:function()
 	{
-		var sqltype=this.findSqlType(this.type,this.maxlength,this.notnull);
+		var sqltype=this.findSqlType(this.type,this.maxlength,this.notnull,this.unique);
 		var label=(this.label) ? ' --'+this.label : '';
 		return '\t'+this.colname+' '+sqltype+','+label+'\n';
 	},
@@ -174,7 +176,8 @@ Ext.define('hiro.Field', {
 			attributes.push('xtype: '+this.quote('datecolumn'));
 			attributes.push('format: this.dateFormat');//'+this.quote('Y-m-d'));
 		}
-		return '{'+attributes.join(', ')+'},\n'
+		attributes.push('editor: '+this.findEditorType(this.type));
+		return '{'+attributes.join(', ')+'},\n';
 	},
 	
 	findJsType:function(type)
@@ -190,7 +193,21 @@ Ext.define('hiro.Field', {
 		else if (type==='String')
 			{return '';}
 		else {return '';}
-		//else {throw 'Can\'t find mapping for JavaScript type '+type+' ('+this.name+')';}
+	},
+	
+	findEditorType: function(type)
+	{
+		if (type==='Date')
+			{return 'this.createDateEditor()';}
+		else if (type==='Boolean')
+			{return 'this.createDateEditor()';}
+		else if (type==='Integer' || type==='Long')
+			{return 'this.createNumericEditor()';}
+		else if (type==='Float' || type==='Double')
+			{return 'this.createEditor()';}
+		else if (type==='String')
+			{return 'this.createEditor()';}
+		else {return 'this.createSelectListEditor({data: \'\'})';}
 	},
 	
 	quote:function(value)
