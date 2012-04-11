@@ -23,6 +23,25 @@ public enum DataType
 	public boolean isNumeric(){return this.numeric;}
 	public String getJson(){return this.json;}
 	
+	
+	public Object convert(String value)
+	{
+		switch(this)
+		{
+		case STRING:
+			return value;
+		case INTEGER:
+			return Integer.valueOf(value);
+		case FLOAT:
+			return Float.valueOf(value);
+		case BOOLEAN:
+			return Boolean.valueOf(value);
+		case DATE:
+			return DateHelper.parse(value, DateHelper.POSTGRES_YYYYMMDD_PATTERN);				
+		}
+		throw new CException("no handler for DataType "+name());
+	}
+	
 	public static DataType guessDataType(Collection<Object> values)
 	{
 		boolean is_integer=true;
