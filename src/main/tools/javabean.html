@@ -26,6 +26,15 @@ function run(form)
 	form.elements["output"].value=output;
 }
 
+function removeAnnotations(str)
+{
+	//console.log(str);
+	//str=str.replace(/@JsonProperty/g, '').trim();
+	str=str.replace(/@\S+/g, '').trim();
+	console.log(str);
+	return str;
+}
+
 function generateCode(input,makegetters,makesetters,interface)
 {	
 	var arr=input.split("\n");
@@ -46,6 +55,8 @@ function generateCode(input,makegetters,makesetters,interface)
 		var usethis=true;
 		if (/\bm_/.test(line))
 			{usethis=false;}
+		
+		line=removeAnnotations(line);
 		
 // 		IF (LINE.INDEXOF("@")!=-1)
 // 		{
