@@ -871,14 +871,37 @@ public final class StringHelper
 		return count;
 	}
 	
-
 	public static String normalize(String value)
+	{
+		return normalize(value, Normalizer.Form.NFKC);
+	}
+	
+	public static String normalize(String value, String type)
+	{
+		return normalize(value, getNormalizerForm(type));
+	}
+	
+	public static String normalize(String value, Normalizer.Form form)
 	{
 		if (value==null)
 			return null;
-		value=Normalizer.normalize(value,Normalizer.Form.NFKC);
+		value=Normalizer.normalize(value, form);
 		return value;
 	}
+	
+	private static Normalizer.Form getNormalizerForm(String type)
+	{
+		if (type.equals("NFD"))
+			return Normalizer.Form.NFD;
+		if (type.equals("NFC"))
+			return Normalizer.Form.NFC;
+		if (type.equals("NFKD"))
+			return Normalizer.Form.NFKD;
+		if (type.equals("NFKC"))
+			return Normalizer.Form.NFKC;
+		throw new CException("unrecognized normalizer form: "+type);		
+	}
+	
 	/*
 	public static String fixWideChars(String value)
 	{
