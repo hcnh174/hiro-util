@@ -61,14 +61,14 @@ Ext.define('hiro.Field', {
 	getPropertyAnnotations:function()
 	{
 		var annotations=[];
-		if (this.json)
-			annotations.push('@JsonProperty');
+		//if (this.json)
+		//	annotations.push('@JsonProperty');
 		this.addValidators(this.maxlength,this.notnull,annotations);
 		//annotations.push('@Column(name="'+this.colname+'")');
 		if (this.isEnum())
 			annotations.push('@Enumerated(EnumType.STRING)');
-		if (this.type=='Date')
-			annotations.push('@JsonSerialize(using=CustomDateSerializer.class)')
+		//if (this.type=='Date')
+		//	annotations.push('@JsonSerialize(using=CustomDateSerializer.class)')
 		if (annotations.length==0)
 			return '';
 		else return annotations.join(' ')+' ';//+'\n';

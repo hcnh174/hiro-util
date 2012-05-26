@@ -786,6 +786,7 @@ public final class WebHelper
 		public static final String PLAIN="text/plain";
 		public static final String TXT="text/txt";
 		public static final String XML="text/xml";
+		public static final String JAVASCRIPT="application/x-javascript";
 		public static final String JSON="application/json";
 		public static final String JPEG="image/jpeg";
 		public static final String PNG="image/png";
