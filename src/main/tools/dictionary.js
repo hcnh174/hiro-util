@@ -31,14 +31,14 @@ Ext.define('hiro.Field', {
 	findDefault:function(dflt,type,isnotnull)
 	{
 		if (!isnotnull)
-			{return 'null';}
+			{return null;}
 		if (type==='String')
 		{
 			if (dflt!=null)
 				{return '"'+dflt+'"';}
-			else {return '""';}
+			else return null;//{return '""';}
 		}
-		return 'null';
+		return null;
 	},
 
 	addValidators:function(maxlength,notnull,annotations)
@@ -90,7 +90,12 @@ Ext.define('hiro.Field', {
 	{
 		var annotations=this.getPropertyAnnotations();
 		var label=(this.label==null) ? '' : ' //'+this.label;
-		return annotations+'protected '+this.type+' '+this.name+'='+this.dflt+';'+label+'\n';
+		var dec=annotations+'protected '+this.type+' '+this.name;
+		if (this.dflt)
+			dec+='='+this.dflt;
+		dec+=';';
+		dec+=label+'\n';
+		return dec;
 	},
 	
 	createSetter:function()
@@ -183,7 +188,7 @@ Ext.define('hiro.Field', {
 	findJsType:function(type)
 	{
 		if (type==='Date')
-			{return ', type: \'date\', dateFormat: \'time\'';}
+			{return ', type: \'date\', dateFormat: i18n.dateFormat';}
 		else if (type==='Boolean')
 			{return ', type: \'boolean\'';}
 		else if (type==='Integer' || type==='Long')

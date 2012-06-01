@@ -109,8 +109,10 @@ public enum DataType
 			return DataType.DATE;
 		else if (obj instanceof Byte)
 			return DataType.STRING;
-		if (obj!=null)
-			throw new CException("no guessDataType handler for class "+obj.getClass().getName()+": ["+obj.toString()+"]");
+		//else if (obj.getClass().getSuperclass().toString().equals("java.lang.Enum"))
+		//	return DataType.STRING;
+		//if (obj!=null)
+		//	throw new CException("no guessDataType handler for class "+obj.getClass().getName()+": ["+obj.toString()+"]");
 			//System.err.println("no guessDataType handler for class "+obj.getClass().getName());
 		return DataType.STRING;
 	}

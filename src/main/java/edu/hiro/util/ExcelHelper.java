@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
@@ -443,6 +444,23 @@ public class ExcelHelper
 			return;
 		Cell cell=getCell(sheet,c,r);
 		cell.setCellValue(value);
+		cell.setCellStyle(style);
+	}
+	
+	public void setCell(Sheet sheet, int c, int r, Date value, String format)
+	{
+		if (value==null)
+			return;
+		Cell cell=getCell(sheet,c,r);
+		cell.setCellValue(DateHelper.format(value,format));
+	}
+	
+	public void setCell(Sheet sheet, int c, int r, Date value, String format, CellStyle style)
+	{
+		if (value==null)
+			return;
+		Cell cell=getCell(sheet,c,r);
+		cell.setCellValue(DateHelper.format(value,format));
 		cell.setCellStyle(style);
 	}
 	

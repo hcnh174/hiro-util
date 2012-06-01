@@ -4,6 +4,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -18,15 +19,15 @@ import com.google.common.collect.Maps;
 
 public class BeanHelper
 {
-	protected String logfile="c:/temp/beanutilerrors.txt";
-	protected boolean logerrors=true;
+	//protected String logfile="c:/temp/beanutilerrors.txt";
+	//protected boolean logerrors=true;
 	
 	public void copyProperties(Object target, Object src)
 	{
 		if (target==null)
-			throw new CException("CBeanHelper.copy(): target object is null");
+			throw new CException("BeanHelper.copy(): target object is null");
 		if (src==null)
-			throw new CException("CBeanHelper.copy(): source object is null");
+			throw new CException("BeanHelper.copy(): source object is null");
 		try
 		{
 			BeanUtils.copyProperties(src, target);
@@ -34,9 +35,35 @@ public class BeanHelper
 		catch(Exception e)
 		{
 			System.err.println(e.getMessage());
+			System.err.println("target="+target.getClass().getCanonicalName()+", source="+src.getClass().getCanonicalName());
 			//FileHelper.appendFile(logfile,e.getMessage());
 		}
 	}
+	
+	public void copyProperties(Object target, Object src, Collection<String> ignore)
+	{
+		String[] ignoreProperties=new String[ignore.size()];
+		ignore.toArray(ignoreProperties);
+		copyProperties(target,src,ignoreProperties);
+	}
+	
+	public void copyProperties(Object target, Object src, String...ignore)
+	{
+		if (target==null)
+			throw new CException("BeanHelper.copy(): target object is null");
+		if (src==null)
+			throw new CException("BeanHelper.copy(): source object is null");
+		try
+		{
+			BeanUtils.copyProperties(src, target, ignore);
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage());
+			System.err.println("target="+target.getClass().getCanonicalName()+", source="+src.getClass().getCanonicalName());
+		}
+	}
+	
 	
 	public Object getProperty(Object target, String property)
 	{
@@ -291,8 +318,7 @@ public class BeanHelper
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static Object newInstance(Class cls)
+	public static Object newInstance(Class<?> cls)
 	{
 		try
 		{

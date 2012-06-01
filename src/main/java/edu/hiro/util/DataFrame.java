@@ -19,6 +19,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
@@ -455,9 +456,10 @@ public class DataFrame
 	
 	public abstract static class Parser
 	{
-		protected final int ROW_STATUS_INTERVAL=100000;
+		//protected final int ROW_STATUS_INTERVAL=100000;
+		protected Options options;
 		protected int interval=10;
-		protected Charset encoding=Charsets.UTF_8;
+		//protected Charset encoding=Charsets.UTF_8;
 		protected List<IntervalListener> listeners=new ArrayList<IntervalListener>();
 		protected BiMap<Integer,String> headerfields=HashBiMap.create();
 		protected DataFrame dataframe;
@@ -465,9 +467,9 @@ public class DataFrame
 		
 		public Parser(){}
 		
-		public Parser(Charset encoding)
+		public Parser(Options options)
 		{
-			this.encoding=encoding;
+			this.options=options;
 		}
 		
 		public int getInterval(){return this.interval;}
@@ -489,8 +491,29 @@ public class DataFrame
 				headerfields.put(index, colname);
 			}
 			postProcessHeader(fields);
+			setupRownames();
+			System.out.println("idcols="+options.idcols);
 			resetDataFrame();
 			return true;
+		}
+		
+		protected void setupRownames()
+		{
+			System.out.println("setupRownames");
+			if (options.idcols!=null)
+				return;
+			if (options.idnames==null)
+			{
+				options.idcols=Lists.newArrayList(0);
+				return;
+			}
+			options.idcols=Lists.newArrayList();
+			for (String idname : options.idnames)
+			{
+				Integer idcol=headerfields.inverse().get(idname);
+				options.idcols.add(idcol);
+			}
+			System.out.println("idcols="+options.idcols);
 		}
 		
 		public void resetDataFrame()
@@ -505,26 +528,14 @@ public class DataFrame
 			}
 		}
 		
-		/*
-		protected boolean readHeader(List<String> fields)
-		{
-			fields=preProcessHeader(fields);
-			for (int index=0;index<fields.size();index++)
-			{
-				String colname=fields.get(index);
-				Column column=this.dataframe.addColumn(colname);
-				this.columns.put(index,column);
-			}
-			postProcessHeader(fields);
-			return true;
-		}
-		*/
 		protected boolean readLine(List<String> values, int rownum)
 		{
 			values=preProcessLine(values,rownum);
 			if (values.size()!=columns.size())
 				throw new CException("numbers of fields and headings don't match: fields="+values.size()+", columns="+columns.size()+" in row "+rownum);
-			String rowname=values.get(0).trim(); // assume the first column is the row name
+			//String rowname=values.get(0).trim(); // assume the first column is the row name
+			String rowname=getRowname(values);
+			System.out.println("rowname="+rowname);
 			//this.dataframe.rownames.put(rowname,rowname);
 			this.dataframe.rownames.add(rowname);
 			for (int index=0;index<values.size();index++)
@@ -536,6 +547,16 @@ public class DataFrame
 			}
 			postProcessLine(values,rownum);
 			return true;
+		}
+		
+		protected String getRowname(List<String> values)
+		{
+			List<String> list=Lists.newArrayList();
+			for (Integer idcol : options.idcols)
+			{
+				list.add(values.get(idcol).trim());				
+			}
+			return StringHelper.join(list,options.keyDelimiter);
 		}
 		
 		protected boolean notifyListeners(int rownum)
@@ -566,7 +587,7 @@ public class DataFrame
 		
 		protected void postProcessLine(List<String> values, int rownum)
 		{
-			if (rownum%ROW_STATUS_INTERVAL==0)
+			if (rownum%options.ROW_STATUS_INTERVAL==0)
 				System.out.println("reading line "+rownum);
 		}
 	}
@@ -575,16 +596,16 @@ public class DataFrame
 	{	
 		public TabFileParser(){}
 		
-		public TabFileParser(Charset encoding)
+		public TabFileParser(Options options)
 		{
-			super(encoding);
+			super(options);
 		}
 		
 		public void parseFile(String filename)
 		{
 			try		
 			{
-				Files.readLines(new File(filename), this.encoding, new LineProcessor<String>()
+				Files.readLines(new File(filename), this.options.encoding, new LineProcessor<String>()
 				{
 					private int rownum=0;
 					
@@ -634,25 +655,51 @@ public class DataFrame
 	
 	public static DataFrame parseTabFile(String filename)
 	{
-		return parseTabFile(filename,Charsets.UTF_8);
+		return parseTabFile(filename,new Options());
 	}
 	
-	public static DataFrame parseTabFile(String filename, Charset encoding)
+	public static DataFrame parseTabFile(String filename, Options options)
 	{
-		TabFileParser parser=new TabFileParser(encoding);
+		TabFileParser parser=new TabFileParser(options);
 		parser.parseFile(filename);
 		return parser.getDataFrame();
 	}
 	
 	public static DataFrame parse(String str)
 	{
-		return parse(str,Charsets.UTF_8);
+		return parse(str,new Options());
 	}
 	
-	public static DataFrame parse(String str, Charset encoding)
+	public static DataFrame parse(String str, Options options)
 	{
-		TabFileParser parser=new TabFileParser(encoding);
+		TabFileParser parser=new TabFileParser(options);
 		parser.parse(str);
 		return parser.getDataFrame();
+	}
+	
+	public static class Options
+	{
+		public int ROW_STATUS_INTERVAL=100000;
+		public Charset encoding=Charsets.UTF_8;
+		public List<Integer> idcols;
+		public List<String> idnames;
+		public String keyDelimiter="_";
+		
+		public Options(){}
+		
+		public Options(Charset encoding)
+		{
+			this.encoding=encoding;
+		}
+		
+		public Options(String...colnames)
+		{
+			this.idnames=Lists.newArrayList(colnames);
+		}
+		
+		public Options(Integer...colnums)
+		{
+			this.idcols=Lists.newArrayList(colnums);
+		}
 	}
 }

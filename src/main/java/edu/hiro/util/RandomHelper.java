@@ -19,6 +19,9 @@ public final class RandomHelper
 	
 	public static int randomInteger(int min, int max)
 	{
+		//System.out.println("randomInteger: ("+min+"-"+max+")");
+		if (min==max)
+			max+=1;
 		return min+randomInteger(max-min);
 	}
 	
@@ -28,9 +31,28 @@ public final class RandomHelper
 		return random.nextFloat();
 	}
 	
+	public static Float randomFloat(float max)
+	{
+		return randomFloat()*max;
+	}
+//	
+//	public static Float randomFloat(float min, float max)
+//	{
+//		return randomInteger((int)min,(int)max)+randomFloat();
+//	}
+//	
 	public static Float randomFloat(float min, float max)
 	{
-		return randomInteger((int)min,(int)max)+randomFloat();
+		//System.out.println("randomFloat: ("+min+"-"+max+")");
+		if (min>=0 && max<=1)
+			return min+randomFloat(max-min);		
+		float offset=0;
+		if (min<0)
+			offset=Math.abs(min);
+		float value=randomInteger((int)(min+offset),(int)(max+offset))+randomFloat();
+		value=value-offset;
+		//System.out.println("random with negative min ("+min+"-"+max+"). offset="+offset+", value="+value);
+		return value;
 	}
 	
 	public static Boolean randomBoolean()
@@ -43,12 +65,17 @@ public final class RandomHelper
 		return randomFloat()<=prob_true;
 	}
 	
-	public static String randomText(String ... args)
+	public static String randomText(List<String> items)
 	{
-		List<String> items=Arrays.asList(args);
 		return items.get(RandomHelper.randomInteger(items.size()));
 	}
 	
+	public static String randomText(String ... args)
+	{
+		List<String> items=Arrays.asList(args);
+		return randomText(items);
+	}
+		
 	public static Date randomDate()
 	{
 		return DateHelper.setDate(1950+RandomHelper.randomInteger(60), RandomHelper.randomInteger(12)+1, RandomHelper.randomInteger(30)+1);

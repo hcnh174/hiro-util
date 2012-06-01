@@ -69,6 +69,10 @@ public final class DateHelper
 				return null;
 			//if (value.indexOf(" ")!=-1)
 			//	pattern=DATETIME_PATTERN; // EXCEL_PATTERN //hack!
+			if (value.indexOf("/")!=-1 && pattern.indexOf("-")!=-1)
+				value=StringHelper.replace(value, "/","-");
+			else if (value.indexOf("-")!=-1 && pattern.indexOf("/")!=-1)
+				value=StringHelper.replace(value, "-","/");
 			SimpleDateFormat formatter=new SimpleDateFormat(pattern,LOCALE);
 			return formatter.parse(value.trim());
 		}
@@ -243,17 +247,10 @@ public final class DateHelper
 		return calendar.getTime();
 	}
 	
-	/*
-	public static Date setToMidnight(Date date)
+	public static boolean datesMatch(Date date1, Date date2)
 	{
-		Calendar calendar=new GregorianCalendar();
-		calendar.setTime(date);
-		calendar.set(Calendar.HOUR_OF_DAY,0);
-		calendar.set(Calendar.MINUTE,0);
-		calendar.set(Calendar.SECOND,0);
-		return calendar.getTime();
+		return (setToMidnight(date1).compareTo(setToMidnight(date2))==0);
 	}
-	*/
 	
 	public static Date stripDate(Date date)
 	{
@@ -312,8 +309,13 @@ public final class DateHelper
 	}
 	
 	// returns duration in minutes
-	public static int getDuration(Date date1, Date date2)
+	public static Integer getDuration(Date date1, Date date2)
 	{
+		if (date1==null || date2==null)
+		{
+			System.err.println("can't determine duration because of null date. date1="+date1+", date2="+date2);
+			return null;
+		}
 		long diff=date2.getTime()-date1.getTime();
 		return (int)(diff/(60*1000));
 	}
@@ -334,6 +336,14 @@ public final class DateHelper
 		return Math.abs(year2-year1);		
 	}
 	
+	public static Integer getDurationInWeeks(Date date1, Date date2)
+	{
+		Integer minutes=getDuration(date1,date2);
+		if (minutes==null)
+			return null;
+		return minutes/(60*24*7);
+	}
+	
 	public static int getDaysInMonth(Date date)
 	{
 		Calendar calendar=new GregorianCalendar();
@@ -343,7 +353,7 @@ public final class DateHelper
 		calendar.add(Calendar.DATE,-1);
 		return calendar.get(Calendar.DATE);
 	}
-	
+
 	// if startdate is null, sets start to midnight on current date and enddate to one day from then
 	public static class DateRange
 	{

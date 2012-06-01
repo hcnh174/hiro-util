@@ -1,5 +1,6 @@
 package edu.hiro.util;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -220,5 +221,18 @@ public final class MathHelper
 		if (((double)ids.size())%((double)batchsize)!=0)
 			batches.add(ids.subList(start,ids.size()));
 		return batches;
+	}
+	
+	public static Float format(Float value, int numdec)
+	{
+		String format="#."+StringHelper.repeatString("#",numdec);
+		DecimalFormat df = new DecimalFormat(format);
+		return Float.valueOf(df.format(value));
+	}
+	
+	public static Float format(Float value, String format)
+	{
+		DecimalFormat df = new DecimalFormat(format);
+		return Float.valueOf(df.format(value));
 	}
 }
