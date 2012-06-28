@@ -36,7 +36,10 @@ name	type	maxlength	notnull	json	dflt	colname	label	source	sample
 <textarea name="extjsmodelfields" cols="100" rows="6"></textarea>
 <hr/>ExtJs grid fields<br/>
 <textarea name="extjsgridfields" cols="100" rows="6"></textarea>
+<hr/>Fields Enum<br/>
+<textarea name="fieldenum" cols="100" rows="6"></textarea>
 </form>
+
 
 <form name="form2">
 <b>CamelCase Utility</b>
@@ -89,6 +92,7 @@ function run(form)
 // 	form.elements.view.value=dictionary.createView();
  	form.elements.extjsmodelfields.value=dictionary.createExtJsModelFields();
  	form.elements.extjsgridfields.value=dictionary.createExtJsGridFields();
+ 	form.elements.fieldenum.value=dictionary.createFieldEnum();
 // 	form.elements.extjsformfields.value=dictionary.createExtJsFormFields();
 // 	form.elements.jsonfields.value=dictionary.createJsonFields();
 }
@@ -103,7 +107,8 @@ function clearForm(form)
 	//form.elements.converters.value='';
 	//form.elements.view.value='';
 	form.elements.extjsmodelfields.value='';
-	form.elements.extjsgridfields.value='';	
+	form.elements.extjsgridfields.value='';
+	form.elements.fieldenum.value='';	
 	//form.elements.jsonfields.value='';
 }
 

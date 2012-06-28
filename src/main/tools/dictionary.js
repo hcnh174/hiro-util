@@ -185,6 +185,11 @@ Ext.define('hiro.Field', {
 		return '{'+attributes.join(', ')+'},\n';
 	},
 	
+	createFieldEnum:function()
+	{
+		return this.name+'("'+this.label+'",'+this.type+'.class),\n';
+	},
+	
 	findJsType:function(type)
 	{
 		if (type==='Date')
@@ -205,7 +210,7 @@ Ext.define('hiro.Field', {
 		if (type==='Date')
 			{return 'this.createDateEditor()';}
 		else if (type==='Boolean')
-			{return 'this.createDateEditor()';}
+			{return 'this.createCheckboxEditor()';}
 		else if (type==='Integer' || type==='Long')
 			{return 'this.createNumericEditor()';}
 		else if (type==='Float' || type==='Double')
@@ -382,11 +387,20 @@ Ext.define('hiro.Dictionary', {
 			buffer.push(field.createExtJsGridField());
 		}
 		return buffer.join('');
+	},
+	
+	createFieldEnum:function()
+	{
+		var buffer=[], field;
+		for (var i=0;i<this.fields.length;i++)
+		{
+			field=this.fields[i];
+			buffer.push(field.createFieldEnum());
+		}
+		return buffer.join('');
 	}
 	
-	/*
-	
-	
+	/*	
 	createExtJsFormFields:function()
 	{
 		var buffer=[], field;
