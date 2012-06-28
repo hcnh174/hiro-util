@@ -621,4 +621,11 @@ public class ExcelHelper
 	
 	// copy sheets
 	//http://www.coderanch.com/t/420958/open-source/Copying-sheet-excel-file-another
+	
+	public void passwordProtect(Sheet sheet, String envvar)
+	{
+		String password=System.getenv(envvar);
+		if (StringHelper.hasContent(password))
+			sheet.protectSheet(password);
+	}
 }

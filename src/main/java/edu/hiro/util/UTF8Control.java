@@ -44,3 +44,4 @@ public class UTF8Control extends Control {
         return bundle;
     }
 }
+

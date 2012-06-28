@@ -105,6 +105,47 @@ public class SimpleBeanHelper
 		throw new CException("can't find enum property: "+property+"="+value+" for class "+cls.getName());
 	}
 	
+	public Object convertPropertyFromString(Object obj, String property, String value)
+	{
+		if (obj==null)
+			throw new CException("reference object is null for "+property+"="+value);
+		// first determine type of property
+		Class<?> cls=getType(obj,property);
+		return convertPropertyFromString(value,cls);
+	}
+	
+	private Object convertPropertyFromString(String value, Class<?> cls)
+	{
+		if (cls==null)
+			return null;
+		String classname=cls.getName();
+		if ("java.lang.String".equals(classname))
+			return value;
+		else if ("java.lang.Integer".equals(classname) || "int".equals(classname))
+			return MathHelper.parseInt(value);
+		else if ("java.lang.Double".equals(classname) || "double".equals(classname))
+			return MathHelper.parseDouble(value);
+		else if ("java.lang.Float".equals(classname) || "float".equals(classname))
+			return MathHelper.parseFloat(value);
+		else if ("java.lang.Boolean".equals(classname) || "boolean".equals(classname))
+			return MathHelper.parseBoolean(value);
+		else if ("java.util.Date".equals(classname))
+			return DateHelper.parse(value,datepattern,false);
+		else if (cls.isEnum())
+			return convertEnumFromString(value,cls);
+		return null;
+	}
+	
+	private Object convertEnumFromString(String value, Class<?> cls)
+	{		
+		for (Object constant : Arrays.asList(cls.getEnumConstants()))
+		{
+			if (((Enum)constant).name().equals(value))
+				return constant;
+		}
+		throw new CException("can't find enum property: "+value+" for class "+cls.getName());
+	}
+
 	@SuppressWarnings("unchecked")
 	public void setProperty(Object obj, String property, Object value)
 	{

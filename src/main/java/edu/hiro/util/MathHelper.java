@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 public final class MathHelper
 {
 	private MathHelper(){}
@@ -45,7 +47,7 @@ public final class MathHelper
 			return false;
 		final char[] numbers = str.toCharArray();
 		for (int x = 0; x < numbers.length; x++)
-		{      
+		{
 			final char c = numbers[x];
 			if ((c >= '0') && (c <= '9'))
 				continue;
@@ -53,34 +55,6 @@ public final class MathHelper
 		}
 		return true; // valid
 	}
-	
-	/*
-	public static boolean isFloat(String str)
-	{
-		if (str==null)
-			return false;
-		str=str.trim();
-		if (StringHelper.isEmpty(str))
-			return false;
-		final char[] numbers = str.toCharArray();
-		int numdots=0;
-		for (int x = 0; x < numbers.length; x++)
-		{      
-			final char c = numbers[x];
-			if ((c >= '0') && (c <= '9'))
-				continue;
-			if (c=='.')
-			{
-				numdots++;
-				continue;
-			}
-			return false; // invalid
-		}
-		if (numdots>1) // if there is more than one decimal point
-			return false;
-		return true; // valid
-	}
-	*/
 	
 	public static Integer parseInt(String str, int dflt)
 	{
@@ -104,6 +78,21 @@ public final class MathHelper
 		{
 			return null;
 		}
+	}
+	
+	public static List<Integer> parseInts(String[] arr)
+	{
+		List<Integer> values=Lists.newArrayList();
+		for (String str : arr)
+		{
+			values.add(Integer.valueOf(str));
+		}
+		return values;
+	}
+	
+	public static boolean isNumberLike(String str)
+	{
+		return str.matches(".*[0-9]+.*");
 	}
 	
 	public static boolean isFloat(String str)
