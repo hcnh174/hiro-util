@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Font;
@@ -184,7 +185,8 @@ public class ExcelHelper
 			return null;
 		if (cell.getCellType()==Cell.CELL_TYPE_BLANK)
 			return null;
-		//System.out.println("cell type: "+cell.getCellType());
+		//System.out.println("	cell type: "+cell.getCellType());
+		//cell.setCellType(Cell.CELL_TYPE_STRING); //hack?
 		switch(cell.getCellType())
 		{
 			case Cell.CELL_TYPE_BLANK:
@@ -248,7 +250,14 @@ public class ExcelHelper
 	{
 		if (DateUtil.isCellDateFormatted(cell))
 			return cell.getDateCellValue();
-		else return cell.getNumericCellValue();
+		else return getNumericValueAsString(cell);
+		//else return cell.getNumericCellValue();
+	}
+	
+	private String getNumericValueAsString(Cell cell)
+	{
+		DataFormatter formatter=new DataFormatter();
+		return formatter.formatCellValue(cell);
 	}
 	
 	private Object getNumericValue(Cell cell, CellValue cellValue)
