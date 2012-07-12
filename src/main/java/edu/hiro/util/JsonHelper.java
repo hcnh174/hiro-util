@@ -58,6 +58,7 @@ public final class JsonHelper
 	public static void setSerializationProperties(SerializationConfig serialConfig)
 	{
 		serialConfig.withDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
+		//serialConfig.without(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS);
 	}
 	
 	/*
