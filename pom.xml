@@ -19,7 +19,7 @@
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
 				<artifactId>maven-apt-plugin</artifactId>
-				<version>1.0.2</version>
+				<version>${maven.apt.plugin}</version>
 				<executions>
 					<execution>
 					<goals>

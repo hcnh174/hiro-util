@@ -51,6 +51,20 @@ public final class JsonHelper
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		SerializationConfig config=mapper.getSerializationConfig();
+		setSerializationProperties(config);
+		return mapper;
+	}
+	
+	public static void setSerializationProperties(SerializationConfig serialConfig)
+	{
+		serialConfig.withDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
+	}
+	
+	/*
+	private static ObjectMapper getObjectMapper()
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		SerializationConfig config=mapper.getSerializationConfig();
 		//mapper.getSerializationConfig().set(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
 		mapper.getSerializationConfig().set(SerializationConfig.Feature.INDENT_OUTPUT, true);
 		mapper.getSerializationConfig().set(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
@@ -58,6 +72,7 @@ public final class JsonHelper
 		mapper.setDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
 		return mapper;
 	}
+	*/
 //	
 //	public static <T extends Enum<T>> List<Map<String,String>> getEnumValues(Class<T> cls)
 //	{
