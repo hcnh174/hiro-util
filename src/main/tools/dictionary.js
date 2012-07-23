@@ -227,7 +227,9 @@ Ext.define('hiro.Field', {
 	
 	toUnderscore: function(str)
 	{
-		return str.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
+		var value=str.replace(/([A-Z])/g, function($1){return "_"+$1.toLowerCase();});
+		value=value.replace(/([0-9])_/g, '$1');
+		return value;
 	},
 	
 	toCamel: function(str)
