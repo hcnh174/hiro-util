@@ -91,7 +91,7 @@ public enum DataType
 		if (is_integer)
 			return DataType.INTEGER;
 		if (is_float)
-			return DataType.FLOAT;			
+			return DataType.FLOAT;
 		return DataType.STRING;
 	}
 	

@@ -1,6 +1,8 @@
 target
+build
 .settings
 .shell_history
+.gradle
 log.roo
 *.class
 *.aj

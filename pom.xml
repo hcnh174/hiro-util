@@ -7,12 +7,10 @@
 	    <version>0.1.0.BUILD-SNAPSHOT</version>
 	    <relativePath>../hiro-parent/pom.xml</relativePath>
   	</parent>
-	<groupId>edu.hiro</groupId>
-    <artifactId>hiro-util</artifactId>
+	<artifactId>hiro-util</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.0.BUILD-SNAPSHOT</version>
 	<name>hiro-util</name>
-	<dependencies>		
+	<dependencies>
 	</dependencies>
 	<build>
 		<plugins>
