@@ -5,7 +5,7 @@
 	    <groupId>edu.hiro</groupId>
     	<artifactId>hiro-parent</artifactId>
 	    <version>0.1.0.BUILD-SNAPSHOT</version>
-	    <relativePath>../hiro-parent/pom.xml</relativePath>
+	    <!--  <relativePath>../hiro-parent/pom.xml</relativePath> -->
   	</parent>
 	<artifactId>hiro-util</artifactId>
 	<packaging>jar</packaging>
