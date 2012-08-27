@@ -20,12 +20,12 @@
 				<version>${maven.apt.plugin}</version>
 				<executions>
 					<execution>
-					<goals>
-						<goal>process</goal>
-					</goals>
-					<configuration>
-						<outputDirectory>target/generated-sources/java</outputDirectory>
-						<processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/generated-sources/java</outputDirectory>
+							<processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
 						</configuration>
 					</execution>
 				</executions>

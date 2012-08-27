@@ -91,11 +91,11 @@ public enum DataType
 		if (is_integer)
 			return DataType.INTEGER;
 		if (is_float)
-			return DataType.FLOAT;
+			return DataType.FLOAT;			
 		return DataType.STRING;
 	}
 	
-	private static DataType guessDataTypeByClass(Object obj)
+	public static DataType guessDataTypeByClass(Object obj)
 	{
 		if (obj instanceof String)
 			return DataType.STRING;

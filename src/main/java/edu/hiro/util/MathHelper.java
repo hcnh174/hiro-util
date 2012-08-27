@@ -2,6 +2,8 @@ package edu.hiro.util;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -223,5 +225,26 @@ public final class MathHelper
 	{
 		DecimalFormat df = new DecimalFormat(format);
 		return Float.valueOf(df.format(value));
+	}
+	
+	public static int[] toIntArray(Collection<Integer> values)
+	{
+		int[] arr=new int[values.size()];
+		Iterator iter=values.iterator();
+		for (int index=0; index<values.size(); index++)
+		{
+			arr[index]=(Integer) iter.next();
+		}
+		return arr;
+	}
+	
+	public static int[] toIntArray(int...values)
+	{
+		int[] arr=new int[values.length];
+		for (int index=0; index<values.length; index++)
+		{
+			arr[index]=values[index];
+		}
+		return arr;
 	}
 }

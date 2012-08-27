@@ -149,7 +149,7 @@ public class ExcelHelper
 		}
 	}
 	
-	private void extractRow(Row row, DataFrame dataframe)
+	private void extractRow(Row row, DataFrame<Object> dataframe)
 	{
 		// if the first column is empty, skip and return
 		if (!StringHelper.hasContent(getCellValue(row.getCell(0))))
@@ -526,6 +526,29 @@ public class ExcelHelper
 	}
 	
 	public void setCellValue(Cell cell, Object value)
+	{
+		DataType type=DataType.guessDataTypeByClass(value);
+		switch(type)
+		{
+		case BOOLEAN:
+			cell.setCellValue((Boolean)value);
+			return;
+		case DATE:
+			cell.setCellValue(DateHelper.format((Date)value,DateHelper.DATE_PATTERN));
+			return;
+		case INTEGER:
+			cell.setCellValue((Integer)value);
+			return;
+		case FLOAT:
+			cell.setCellValue((Double)value);
+			return;
+		default:
+			setStringCellValue(cell,value);
+			return;
+		}
+	}
+
+	public void setStringCellValue(Cell cell, Object value)
 	{
 		DataType type=DataType.guessDataType(value);
 		switch(type)

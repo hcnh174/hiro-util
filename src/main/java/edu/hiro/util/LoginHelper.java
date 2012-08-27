@@ -1,6 +1,7 @@
 package edu.hiro.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -123,7 +124,7 @@ public class LoginHelper
 		return user.getUsername();
 	}
 	
-	public static Collection<GrantedAuthority> getAuthorities(final List<String> roles)
+	public static Collection<GrantedAuthority> getAuthorities(final Collection<String> roles)
 	{
 		Collection<GrantedAuthority> authorities=new ArrayList<GrantedAuthority>();
 		for (String role : roles)
@@ -131,6 +132,11 @@ public class LoginHelper
 			authorities.add(new SimpleGrantedAuthority(role));
 		}
 		return authorities;
+	}
+	
+	public static Collection<GrantedAuthority> getAuthorities(final String... roles)
+	{
+		return getAuthorities(Arrays.asList(roles));
 	}
 	
 	public static String getSavedRequest(HttpServletRequest request, HttpServletResponse response, String dflt)

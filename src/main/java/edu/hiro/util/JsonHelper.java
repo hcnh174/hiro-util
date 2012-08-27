@@ -7,9 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -50,43 +48,14 @@ public final class JsonHelper
 	private static ObjectMapper getObjectMapper()
 	{
 		ObjectMapper mapper = new ObjectMapper();
-		SerializationConfig config=mapper.getSerializationConfig();
-		setSerializationProperties(config);
+		configureMapper(mapper);
 		return mapper;
 	}
 	
-	public static void setSerializationProperties(SerializationConfig serialConfig)
+	public static void configureMapper(ObjectMapper mapper)
 	{
-		serialConfig.withDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
-		//serialConfig.without(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS);
-	}
-	
-	/*
-	private static ObjectMapper getObjectMapper()
-	{
-		ObjectMapper mapper = new ObjectMapper();
-		SerializationConfig config=mapper.getSerializationConfig();
-		//mapper.getSerializationConfig().set(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
-		mapper.getSerializationConfig().set(SerializationConfig.Feature.INDENT_OUTPUT, true);
-		mapper.getSerializationConfig().set(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-		mapper.getSerializationConfig().set(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
 		mapper.setDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
-		return mapper;
 	}
-	*/
-//	
-//	public static <T extends Enum<T>> List<Map<String,String>> getEnumValues(Class<T> cls)
-//	{
-//		List<Map<String,String>> list=Lists.newArrayList();
-//		for (T constant : Arrays.asList(cls.getEnumConstants()))
-//		{
-//			Map<String,String> map=Maps.newLinkedHashMap();
-//			map.put("value",constant.name());
-//			map.put("display",constant.toString());
-//			list.add(map);
-//		}
-//		return list;
-//	}
 	
 	@SuppressWarnings("rawtypes")
 	public static Map<String,List<?>> getEnums(Class maincls)

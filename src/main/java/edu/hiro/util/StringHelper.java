@@ -443,7 +443,7 @@ public final class StringHelper
 		return values;
 	}
 	
-	public static String[] toArray(List<String> values)
+	public static String[] toArray(Collection<String> values)
 	{
 		String[] arr=new String[values.size()];
 		values.toArray(arr);

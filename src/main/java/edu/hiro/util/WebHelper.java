@@ -132,7 +132,6 @@ public final class WebHelper
 		return headers;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static Map<String,String> getParameters(HttpServletRequest request)
 	{
 		Map<String,String> params=new LinkedHashMap<String,String>();
@@ -145,7 +144,6 @@ public final class WebHelper
 		return params;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static Map<String,String> getParameters(HttpServletRequest request, int maxlength)
 	{
 		Map<String,String> params=new LinkedHashMap<String,String>();
@@ -188,6 +186,7 @@ public final class WebHelper
 		return false;
 	}
 	
+	// returns the context path
 	public static String getWebapp(HttpServletRequest request)
 	{
 		String webapp=request.getContextPath();
@@ -370,84 +369,6 @@ public final class WebHelper
 		return json(map);
 	}
 	
-	/*
-	public static String json(HttpServletResponse response, Object... args)
-	{
-		try
-		{
-			Object obj=(args.length>1) ? StringHelper.createMap(args) : args[0];
-			response.setCharacterEncoding(FileHelper.ENCODING.toString());
-			ObjectMapper mapper = getObjectMapper();
-			//System.out.println("json="+mapper.writeValueAsString(obj));
-			mapper.writeValue(response.getWriter(),obj);
-			return null;
-		}
-		catch (Exception e)
-		{
-			throw new CException(e);
-		}
-	}
-	
-	public static String json(Object... args)
-	{
-		try
-		{
-			Object obj=(args.length>1) ? StringHelper.createMap(args) : args[0];
-			ObjectMapper mapper = getObjectMapper();
-			return mapper.writeValueAsString(obj);
-		}
-		catch (Exception e)
-		{
-			throw new CException(e);
-		}
-	}
-
-	protected static String jsonSuccess(HttpServletResponse response)
-	{
-		return json(response,SUCCESS,true,MESSAGE,"success");
-	}
-	
-	public static String jsonSuccess(HttpServletResponse response, Object...args)
-	{
-		Map<String,Object> map=StringHelper.createMap(args);
-		map.put(SUCCESS,true);
-		return json(response,map);
-	}
-	
-	public static String jsonSuccessMessage(HttpServletResponse response, String message)
-	{
-		Map<String,Object> map=new LinkedHashMap<String,Object>();
-		map.put(SUCCESS,true);
-		map.put(MESSAGE,message);
-		return json(response,map);
-	}
-	
-	public static String jsonUploadSuccess(HttpServletResponse response, Object...args)
-	{
-		//if (args.length==1)
-		//	return json(response,SUCCESS,true,MESSAGE,args[0]);
-		Map<String,Object> map=StringHelper.createMap(args);
-		map.put(SUCCESS,true);
-		if (!map.containsKey(MESSAGE))
-			map.put(MESSAGE,"success");
-		response.setContentType(ContentType.HTML);
-		String json=json(map);
-		return write(response,json);
-	}
-	
-	private static ObjectMapper getObjectMapper()
-	{
-		ObjectMapper mapper = new ObjectMapper();
-		SerializationConfig config=mapper.getSerializationConfig();
-		mapper.getSerializationConfig().set(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
-		mapper.getSerializationConfig().set(SerializationConfig.Feature.INDENT_OUTPUT, true);
-		mapper.getSerializationConfig().set(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-		mapper.getSerializationConfig().set(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
-		mapper.setDateFormat(new SimpleDateFormat(DateHelper.YYYYMMDD_PATTERN));
-		return mapper;
-	}
-	*/
-	
 	///////////////////////////////////////////////////////
 	
 	
@@ -464,6 +385,13 @@ public final class WebHelper
 		{
 			throw new CException(e);
 		}
+	}
+	
+	public static String write(HttpServletResponse response, String str, boolean preserve)
+	{
+		str="<html><body><pre>"+str+"</pre></body></html>";
+		response.setContentType(ContentType.HTML);
+		return write(response,str);
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////
